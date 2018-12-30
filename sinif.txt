@@ -1,0 +1,671 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#include <time.h>
+struct kayit{
+    char ogrno[10];
+    char ad[20];
+    char soyad[20];
+    char kayit_sirasi[450];
+    char ogrtr[20];
+
+
+}ogrenci[450],yedek,ogr1[250],ogr2[250];
+int ogretim_sirasi_ayirma(struct kayit ogr1[250],struct kayit ogr2[250],struct kayit ogrenci[450],int ogrnu[450],int kayit_sirasi1[450]){
+    int i,j;
+    FILE *fp1;
+    fp1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\1.ogretim.txt","w");
+
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I")){
+            fprintf(fp1,"%-12d %-12s %-12s %-12d %-12s\n",ogrnu[i],ogrenci[i].ad,ogrenci[i].soyad,kayit_sirasi1[i],ogrenci[i].ogrtr);
+        }
+    }
+    fclose(fp1);
+    FILE *inp1;
+    inp1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\2.ogretim.txt","w");
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+         if(!strcmp(ogrenci[i].ogrtr,"II")){
+            fprintf(inp1,"%-12d %-12s %-12s %-12d %-12s\n",ogrnu[i],ogrenci[i].ad,ogrenci[i].soyad,kayit_sirasi1[i],ogrenci[i].ogrtr);
+        }
+    }
+    fclose(inp1);
+    FILE *fp2;
+    fp2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\1.ogretim.txt","r");
+     for(i=0;ogrenci[i].ad[0]!='\0';i++){
+            fscanf(fp2,"%s%s%s%s%s",&ogr1[i].ogrno,&ogr1[i].ad,&ogr1[i].soyad,&ogr1[i].kayit_sirasi,&ogr1[i].ogrtr);
+
+     }
+    fclose(fp2);
+    FILE *inp2;
+    inp2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\2.ogretim.txt","r");
+     for(i=0;ogrenci[i].ad[0]!='\0';i++){
+            fscanf(inp2,"%s%s%s%s%s",&ogr2[i].ogrno,&ogr2[i].ad,&ogr2[i].soyad,&ogr2[i].kayit_sirasi,&ogr2[i].ogrtr);
+
+     }
+     fclose(inp2);
+
+
+}
+int isim_temizleme(struct kayit ogrenci[450]){
+    int i,j,k;
+    printf("2 defa ismi gecen ogrnecilerin tekrarlari silinmistir.\n");
+    printf("Isimler:\n");
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        for(k=1;k<10;k++){
+            if(!strcmp(ogrenci[i].ad,ogrenci[i+1].ad) && !strcmp(ogrenci[i].soyad,ogrenci[i+1].soyad)){
+                //    if(ogrenci[i].ad!='\0'){
+                        printf("%s %s\n",ogrenci[i].ad,ogrenci[i].soyad);
+                //   }
+                for(j=i;ogrenci[j].ad[0]!='\0';j++){
+                    strcpy(ogrenci[j+1].ad,ogrenci[j+2].ad);
+                    strcpy(ogrenci[j+1].soyad,ogrenci[j+2].soyad);
+                    strcpy(ogrenci[j+1].kayit_sirasi,ogrenci[j+2].kayit_sirasi);
+                    strcpy(ogrenci[j+1].ogrtr,ogrenci[j+2].ogrtr);
+                    strcpy(ogrenci[j+1].ogrno,ogrenci[j+2].ogrno);
+                }
+            }
+        }
+    }
+    printf("\n2'den fazla tekrar eden ogrenci yoktur.\n\n");
+    printf("Kayit siralari guncellenmistir.\n");
+
+}
+int kayit_sira_guncelleme(struct kayit ogrenci[450],int kayit_sirasi1[450]){
+    int i,j,k;
+
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+        kayit_sirasi1[i]=atoi(ogrenci[i].kayit_sirasi);
+    }
+    int durum=0;
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(kayit_sirasi1[i]!=0){
+                j=1;
+            while(ogrenci[j].ad[0]!='\0'){
+                if(kayit_sirasi1[i]-1 != kayit_sirasi1[j]){
+                        durum=0;
+                    }
+                else {
+                    durum=1;
+                    break;
+                }
+
+                j++;
+            }
+            if(durum==0){
+                for(k=1;ogrenci[k].ad[0]!='\0';k++){
+                        if(kayit_sirasi1[k]>=kayit_sirasi1[i]){
+                            kayit_sirasi1[k]=kayit_sirasi1[k]-1;
+                        }
+                        else kayit_sirasi1[k]=kayit_sirasi1[k];
+                }
+            }
+            else continue;
+        }
+        else continue;
+
+    }
+}
+int kayit_sayilmasi(struct kayit ogrenci[450],int kayit_sirasi1[450],int x,int y,int z,int t){
+    int i,j;
+        for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I") && kayit_sirasi1[i]!=0){
+                x++;
+        }
+        if(!strcmp(ogrenci[i].ogrtr,"II") && kayit_sirasi1[i]!=0){
+                y++;
+        }
+
+        else continue;
+
+    }
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I") && kayit_sirasi1[i]==0){
+                z++;
+        }
+        if(!strcmp(ogrenci[i].ogrtr,"II") && kayit_sirasi1[i]==0){
+                t++;
+        }
+
+        else continue;
+
+    }
+}
+int ogrenci_numara_atama(struct kayit ogrenci[450],int kayit_sirasi1[450],int ogrnu[450], int x){
+    int i;
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+        ogrnu[i]=atoi(ogrenci[i].ogrno);
+    }
+
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I")){
+                if(strcmp(ogrenci[i].kayit_sirasi,"0")){
+                    ogrnu[i]=1701000+kayit_sirasi1[i];
+                }
+        }
+        else{
+            if(strcmp(ogrenci[i].kayit_sirasi,"0")){
+                    ogrnu[i]=1702000+kayit_sirasi1[i]-x;
+                }
+        }
+    }
+
+
+}
+int numara_siralamasi(struct kayit ogrenci[450],struct kayit yedek,int kayit_sirasi1[450],int ogrnu[450]){
+    int i,j;
+    int gecici,kayit_sirasi2;
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+        for(j=i+1;ogrenci[j].ad[0]!='\0';j++){
+            if(ogrnu[i]>ogrnu[j]){
+                gecici=ogrnu[i];
+                ogrnu[i]=ogrnu[j];
+                ogrnu[j]=gecici;
+
+                strcpy(yedek.ad,ogrenci[i].ad);
+                strcpy(ogrenci[i].ad,ogrenci[j].ad);
+                strcpy(ogrenci[j].ad,yedek.ad);
+
+                strcpy(yedek.soyad,ogrenci[i].soyad);
+                strcpy(ogrenci[i].soyad,ogrenci[j].soyad);
+                strcpy(ogrenci[j].soyad,yedek.soyad);
+
+                kayit_sirasi2=kayit_sirasi1[i];
+                kayit_sirasi1[i]=kayit_sirasi1[j];
+                kayit_sirasi1[j]=kayit_sirasi2;
+
+                strcpy(yedek.ogrtr,ogrenci[i].ogrtr);
+                strcpy(ogrenci[i].ogrtr,ogrenci[j].ogrtr);
+                strcpy(ogrenci[j].ogrtr,yedek.ogrtr);
+
+            }
+        }
+    }
+    for(i=0;ogrenci[i].ad[0]!='\0';i++){
+        if(ogrnu[i]==ogrnu[i+1]){
+            for(j=i;ogrenci[j].ad[0]!='\0';j++){
+                ogrnu[j+1]=ogrnu[j+1]+1;
+            }
+        }
+    }
+}
+int main(){
+
+    clock_t start=clock();
+    int i,j,k,x=0,y=0,z=0,t=0,kayit_sirasi1[450],ogrnu[450];
+
+
+    FILE *fp;
+    ///dosyadan aldý
+    fp=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\ilkkayit.txt","r+");
+    for(i=0;i<450;i++){
+         fscanf(fp,"%s%s%s%s%s",&ogrenci[i].ogrno,&ogrenci[i].ad,&ogrenci[i].soyad,&ogrenci[i].kayit_sirasi,&ogrenci[i].ogrtr);
+    }
+    fclose(fp);
+///dosyadan çýktý
+
+    isim_temizleme(ogrenci);
+    kayit_sira_guncelleme(ogrenci,kayit_sirasi1);
+
+
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I") && kayit_sirasi1[i]!=0){
+                x++;
+        }
+        if(!strcmp(ogrenci[i].ogrtr,"II") && kayit_sirasi1[i]!=0){
+                y++;
+        }
+
+        else continue;
+
+    }
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+        if(!strcmp(ogrenci[i].ogrtr,"I") && kayit_sirasi1[i]==0){
+                z++;
+        }
+        if(!strcmp(ogrenci[i].ogrtr,"II") && kayit_sirasi1[i]==0){
+                t++;
+        }
+
+        else continue;
+
+    }
+    printf("x:%d\ty:%d\tz:%d\tt:%d\n",x,y,z,t);
+
+    ogrenci_numara_atama(ogrenci,kayit_sirasi1,ogrnu,x);
+
+    numara_siralamasi(ogrenci,yedek,kayit_sirasi1,ogrnu);
+    ogretim_sirasi_ayirma(ogr1,ogr2,ogrenci,ogrnu,kayit_sirasi1);
+
+///sinif aliniyor
+
+    int a,kapasite=0;
+    printf("Sinif Sayisi Giriniz: ");
+    scanf("%d",&a);
+    int sinif[a];
+    LOOP:
+    kapasite=0;
+
+    printf("\nSinif kapasaitelerini giriniz:");
+    for(i=0;i<a;i++){
+        scanf("%d",&sinif[i]);
+    }
+    for(i=0;i<a;i++){
+        printf("%d\n",sinif[i]);
+    }
+    for(i=0;i<a;i++){
+        kapasite += sinif[i];
+    }
+    if(kapasite<x+z || kapasite<y+t){
+
+        printf("Girdiginiz toplam kapasite mevcut ogrenci icin yetersizdir.\nLutfen sinif kapasitelerini tekrar giriniz:");
+        goto LOOP;
+    }
+///aldi.
+    int sinifk[a],sinifk_k[a],sinifk1[a],sinifk1_k[a],sinifb[a],sinifb1[a];
+    printf("\n\nDersi alan ogrenci sayisi  1. ogretim:  %d  2. ogretim:  %d\n",x+z,y+t);
+    int gecici;
+    for(i=0;i<a;i++){
+        sinifk[i]=sinif[i];
+        sinifk1[i]=sinif[i];
+        sinifb[i]=sinif[i];
+        sinifb1[i]=sinif[i];
+    }
+    for(i=0;i<a;i++){
+        for(j=i+1;j<a;j++){
+            if(sinifk[i]>sinif[j]){
+                gecici=sinifk[i];
+                sinifk[i]=sinifk[j];
+                sinifk[j]=gecici;
+            }
+            if(sinifb[i]< sinif[j]){
+                gecici=sinifb[i];
+                sinifb[i]=sinifb[j];
+                sinifb[j]=gecici;
+            }
+
+        }
+    }
+    for(i=0;i<a;i++){
+        sinifk1_k[i]=sinifk1[i];
+        sinifk_k[i]=sinifk[i];
+    }
+
+
+    int b1=x+z;
+    int b2=y+t;/*
+    printf("sinifk:\n");
+    for(i=0;i<a;i++){
+        printf("%d\n",sinifk[i]);
+    }
+    printf("sinifb:\n");
+    for(i=0;i<a;i++){
+        printf("%d\n",sinifb[i]);
+    }*/
+///esit dagilim yapiyor
+
+    int kalan1=0;
+    if(b1%a!=0){
+        kalan1=b1%a;
+    }
+
+    int h=a;
+    for(i=0;i<a;i++){
+        b1=b1/h;
+        if(sinifk[i]>=b1){
+            for(j=i;j<a;j++){
+                sinifk[j]=b1;
+            }
+            break;
+        }
+        if(sinifk[i]<b1){
+            b1=b1*h;
+            b1=b1-sinifk[i];
+            h--;
+        }
+    }
+
+    if(kalan1>0){
+        for(i=0;i<a;i++){
+            if(sinifk[i]<sinifk_k[i]){
+                sinifk[i] += 1;
+                kalan1--;
+            }
+            if(kalan1==0) break;
+
+        }
+    }
+
+    int kalan2=0;
+    if(b2%a!=0){
+        kalan2=b2%a;
+    }
+
+    h=a;
+    for(i=0;i<a;i++){
+        b2=b2/h;
+        if(sinifk1[i]>=b2){
+            for(j=i;j<a;j++){
+                sinifk1[j]=b2;
+            }
+            break;
+        }
+        if(sinifk1[i]<b2){
+            b2=b2*h;
+            b2=b2-sinifk1[i];
+            h--;
+        }
+    }
+    if(kalan2>0){
+        for(i=0;i<a;i++){
+            if(sinifk1[i]<sinifk1_k[i]){
+                sinifk1[i] += 1;
+                kalan2--;
+            }
+            if(kalan2==0) break;
+
+        }
+    }
+///en az sinif dagililimi yapiyor
+    b1=x+z;
+    b2=y+t;
+    for(i=0;i<a;i++){
+        if(sinifb[i]<b1){
+            b1=b1-sinifb[i];
+        }
+        else if(sinifb[i]>b1){
+            sinifb[i]=b1;
+            for(j=i+1;j<a;j++){
+                sinifb[j]=0;
+            }
+        }
+    }
+    for(i=0;i<a;i++){
+        if(sinifb1[i]<b2){
+            b2=b2-sinifb1[i];
+        }
+        else if(sinifb1[i]>b2){
+            sinifb1[i]=b2;
+            for(j=i+1;j<a;j++){
+                sinifb1[j]=0;
+            }
+        }
+    }
+
+    printf("Esit dagilim: 1. ogretim - ");
+    for(i=0;i<a;i++){
+        printf("%d ",sinifk[i]);
+    }
+    printf("........");
+    printf("2. ogretim: ");
+    for(i=0;i<a;i++){
+        printf("%d ",sinifk1[i]);
+    }
+    printf("\n\n");
+    printf("En az sinif dagilimi 1. ogretim - ");
+    for(i=0;i<a;i++){
+        printf("%d ",sinifb[i]);
+    }
+    printf("........");
+    printf("2. ogretim: ");
+    for(i=0;i<a;i++){
+        printf("%d ",sinifb1[i]);
+    }
+
+    FILE *inp;
+    inp=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\temizkayit.txt","w");
+
+    fprintf(inp,"%-10s %-15s %-15s %-12s %-12s\n",ogrenci[0].ogrno,ogrenci[0].ad,ogrenci[0].soyad,ogrenci[0].kayit_sirasi,ogrenci[0].ogrtr);
+    for(i=1;ogrenci[i].ad[0]!='\0';i++){
+         fprintf(inp,"%-10d %-15s %-15s %-12d %-12s\n",ogrnu[i],ogrenci[i].ad,ogrenci[i].soyad,kayit_sirasi1[i],ogrenci[i].ogrtr);
+   }
+    fclose(inp);
+///1.ogretim esit dagilim
+    FILE *sinif1_1;
+    sinif1_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif1ogr1e.txt","w");
+    for(i=0;i<sinifk[0];i++){
+        fprintf(sinif1_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif1_1);
+
+    FILE *sinif2_1;
+    sinif2_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif2ogr1e.txt","w");
+    for(i=sinifk[0];i<sinifk[0]+sinifk[1];i++){
+        fprintf(sinif2_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif2_1);
+
+    FILE *sinif3_1;
+    sinif3_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif3ogr1e.txt","w");
+    for(i=sinifk[0]+sinifk[1];i<sinifk[0]+sinifk[1]+sinifk[2];i++){
+        fprintf(sinif3_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif3_1);
+
+    FILE *sinif4_1;
+    sinif4_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif4ogr1e.txt","w");
+    for(i=sinifk[0]+sinifk[1]+sinifk[2];i<sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3];i++){
+        fprintf(sinif4_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif4_1);
+
+    FILE *sinif5_1;
+    sinif5_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif5ogr1e.txt","w");
+    if(a>4){
+        for(i=sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3];i<sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3]+sinifk[4];i++){
+            fprintf(sinif5_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif5_1);
+
+    FILE *sinif6_1;
+    sinif6_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif6ogr1e.txt","w");
+    if(a>5){
+        for(i=sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3]+sinifk[4];i<sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3]+sinifk[4]+sinifk[5];i++){
+            fprintf(sinif6_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif6_1);
+
+
+    FILE *sinif7_1;
+    sinif7_1=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_1\\sinif7ogr1e.txt","w");
+    if(a>6){
+        for(i=sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3]+sinifk[4]+sinifk[5];i<sinifk[0]+sinifk[1]+sinifk[2]+sinifk[3]+sinifk[4]+sinifk[5]+sinifk[6];i++){
+            fprintf(sinif7_1,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif7_1);
+///
+
+///1.ogretim en az sinif
+
+    FILE *sinif1_1b;
+    sinif1_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif1ogr1b.txt","w");
+    for(i=0;i<sinifb[0];i++){
+        fprintf(sinif1_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif1_1b);
+
+    FILE *sinif2_1b;
+    sinif2_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif2ogr1b.txt","w");
+    for(i=sinifb[0];i<sinifb[0]+sinifb[1];i++){
+        fprintf(sinif2_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif2_1b);
+
+    FILE *sinif3_1b;
+    sinif3_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif3ogr1b.txt","w");
+    for(i=sinifb[0]+sinifb[1];i<sinifb[0]+sinifb[1]+sinifb[2];i++){
+        fprintf(sinif3_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif3_1b);
+
+    FILE *sinif4_1b;
+    sinif4_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif4ogr1b.txt","w");
+    for(i=sinifb[0]+sinifb[1]+sinifb[2];i<sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3];i++){
+        fprintf(sinif4_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+    }
+    fclose(sinif4_1b);
+
+    FILE *sinif5_1b;
+    sinif5_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif5ogr1b.txt","w");
+    if(a>4){
+        for(i=sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3];i<sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3]+sinifb[4];i++){
+            fprintf(sinif5_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif5_1b);
+
+    FILE *sinif6_1b;
+    sinif6_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif6ogr1b.txt","w");
+    if(a>5){
+        for(i=sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3]+sinifb[4];i<sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3]+sinifb[4]+sinifb[5];i++){
+            fprintf(sinif6_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif6_1b);
+
+    FILE *sinif7_1b;
+    sinif7_1b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_1\\sinif7ogr1b.txt","w");
+    if(a>6){
+        for(i=sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3]+sinifb[4]+sinifb[5];i<sinifb[0]+sinifb[1]+sinifb[2]+sinifb[3]+sinifb[4]+sinifb[5]+sinifb[6];i++){
+            fprintf(sinif7_1b,"%-10s %-15s %-15s %-12s %-12s\n",ogr1[i].ogrno,ogr1[i].ad,ogr1[i].soyad,ogr1[i].kayit_sirasi,ogr1[i].ogrtr);
+        }
+    }
+    fclose(sinif7_1b);
+///
+
+///2. ogretim esit dagilim
+
+    FILE *sinif1_2;
+    sinif1_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif1ogr2e.txt","w");
+    for(i=0;i<sinifk1[0];i++){
+        fprintf(sinif1_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif1_2);
+
+    FILE *sinif2_2;
+    sinif2_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif2ogr2e.txt","w");
+    for(i=sinifk1[0];i<sinifk1[0]+sinifk1[1];i++){
+        fprintf(sinif2_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif2_2);
+
+    FILE *sinif3_2;
+    sinif3_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif3ogr2e.txt","w");
+    for(i=sinifk1[0]+sinifk1[1];i<sinifk1[0]+sinifk1[1]+sinifk1[2];i++){
+        fprintf(sinif3_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif3_2);
+
+
+    FILE *sinif4_2;
+    sinif4_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif4ogr2e.txt","w");
+    for(i=sinifk1[0]+sinifk1[1]+sinifk1[2];i<sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3];i++){
+        fprintf(sinif4_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif4_2);
+
+
+    FILE *sinif5_2;
+    sinif5_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif5ogr2e.txt","w");
+    if(a>4){
+        for(i=sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3];i<sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3]+sinifk1[4];i++){
+            fprintf(sinif5_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+    fclose(sinif5_2);
+
+    FILE *sinif6_2;
+    sinif6_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif6ogr2e.txt","w");
+    if(a>5){
+        for(i=sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3]+sinifk1[4];i<sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3]+sinifk1[4]+sinifk1[5];i++){
+            fprintf(sinif6_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+    fclose(sinif6_2);
+
+    FILE *sinif7_2;
+    sinif7_2=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\esit_dagilim_2\\sinif7ogr2e.txt","w");
+    if(a>6){
+        for(i=sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3]+sinifk1[4]+sinifk1[5];i<sinifk1[0]+sinifk1[1]+sinifk1[2]+sinifk1[3]+sinifk1[4]+sinifk1[5]+sinifk1[6];i++){
+            fprintf(sinif7_2,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+    fclose(sinif7_2);
+///
+
+///2. ogretim en az sinif
+
+    FILE *sinif1_2b;
+    sinif1_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif1ogr2b.txt","w");
+    for(i=0;i<sinifb1[0];i++){
+        fprintf(sinif1_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif1_2b);
+
+    FILE *sinif2_2b;
+    sinif2_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif2ogr2b.txt","w");
+    for(i=sinifb1[0];i<sinifb1[0]+sinifb1[1];i++){
+        fprintf(sinif2_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif2_2b);
+
+    FILE *sinif3_2b;
+    sinif3_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif3ogr2b.txt","w");
+    for(i=sinifb1[0]+sinifb1[1];i<sinifb1[0]+sinifb1[1]+sinifb1[2];i++){
+        fprintf(sinif3_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif3_2b);
+
+
+    FILE *sinif4_2b;
+    sinif4_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif4ogr2b.txt","w");
+    for(i=sinifb1[0]+sinifb1[1]+sinifb1[2];i<sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3];i++){
+        fprintf(sinif4_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+    }
+    fclose(sinif4_2b);
+
+    FILE *sinif5_2b;
+    sinif5_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif5ogr2b.txt","w");
+    if(a>4){
+        for(i=sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3];i<sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3]+sinifb1[4];i++){
+            fprintf(sinif5_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+
+    fclose(sinif5_2b);
+
+    FILE *sinif6_2b;
+    sinif6_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif6ogr2b.txt","w");
+    if(a>5){
+        for(i=sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3]+sinifb1[4];i<sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3]+sinifb1[4]+sinifb1[5];i++){
+            fprintf(sinif6_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+
+    fclose(sinif6_2b);
+
+    FILE *sinif7_2b;
+    sinif7_2b=fopen("C:\\Users\\emre9\\Desktop\\prolab2dosyalar\\enaz_dagilim_2\\sinif7ogr2b.txt","w");
+    if(a>6){
+        for(i=sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3]+sinifb1[4]+sinifb1[5];i<sinifb1[0]+sinifb1[1]+sinifb1[2]+sinifb1[3]+sinifb1[4]+sinifb1[5]+sinifb1[6];i++){
+            fprintf(sinif7_2b,"%-10s %-15s %-15s %-12s %-12s\n",ogr2[i].ogrno,ogr2[i].ad,ogr2[i].soyad,ogr2[i].kayit_sirasi,ogr2[i].ogrtr);
+        }
+    }
+
+    fclose(sinif7_2b);
+
+
+
+
+
+    clock_t end=clock();
+    double times=(double)(end-start);
+    printf("\nprogramin calisma suresi:%lf saniyedir.",times/1000);
+
+    return 0;
+}
